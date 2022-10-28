@@ -298,7 +298,7 @@ md"""
 
 CERMICS, École des Ponts
 
-Notebook access: [TODO](gdalle.github.io/inferopt-juliacon2022/)
+Notebook access: [https://github.com/BatyLeo/InferOpt-CERMICS2022](https://github.com/BatyLeo/InferOpt-CERMICS2022)
 """
 
 # ╔═╡ a6cb796f-32bf-4dbd-a9d4-61b454dad548
@@ -403,6 +403,14 @@ begin
 	computed_path = plot(load("./images/Warcraft/computed_path.png"), title = "Computed shortest path")
 	plot(mapterrain, labelpath, computed_path, layout = (1,3), ticks = nothing, border = nothing, size = (800, 300))
 end
+
+# ╔═╡ 1574b408-cf50-4c57-9fb8-eaa22bb3ece1
+md"""
+## Results
+
+!!! todo
+	TODO
+"""
 
 # ╔═╡ 400867ad-11e6-411b-8b1f-c64685630fdc
 md"""
@@ -518,7 +526,8 @@ end
 
 # ╔═╡ f8a2cace-50e1-4d5f-86b6-91c820bace26
 md"""
-TODO more detailed results
+!!! todo
+	TODO more detailed results
 """
 
 # ╔═╡ c59d4022-fdd5-469f-8fb1-abbcb6a81c8a
@@ -555,7 +564,7 @@ md"""
 \fbox{Loss}
 ```
 
-The function
+The combinatorial layer function
 
 ```math
 f\colon \theta\mapsto \underset{y \in \mathcal{Y}}{\mathrm{argmax}} ~ \theta^\top y
@@ -568,9 +577,14 @@ Given a convex function $\Omega$, the regularized optimizer is defined by:
 \hat{f}(\theta) = \underset{y \in \mathrm{conv}(\mathcal{Y})}{\mathrm{argmax}} \{\theta^\top y - \Omega(y)\} 
 ```
 
-It becomes differentiable.
+``\implies`` becomes differentiable.
 
 Can be seen as an expectation over the vertices of $\mathrm{conv}(\mathcal{Y})$.
+
+```math
+
+\hat{f}(\theta) = \mathbb{E}_{\hat{p}(\cdot|\theta)}[Y] = \sum_{y\in\mathcal{Y}}~y~\hat{p}(y|\theta)
+```
 """
 
 # ╔═╡ 53f7468d-0015-4339-8e27-48812f541329
@@ -716,6 +730,11 @@ perturbed = PerturbedAdditive(polytope_maximizer; ε=ε_pert, nb_samples=nb_samp
 
 # ╔═╡ 0fc739a0-661f-4fca-8e61-b20779c537ff
 plot_polytope(α_pert, perturbed; title="")
+
+# ╔═╡ c72435b7-59ae-4f77-86fb-feb175ba88e6
+md"""
+``\alpha`` is the angle of the objective ``\theta``, ``\varepsilon`` is the size of the regularization, and $M$ is the number of samples drawn in order to estimate the expectation.
+"""
 
 # ╔═╡ 6801811b-f68a-43b4-8b78-2f27c0dc6331
 md"""
@@ -873,12 +892,6 @@ end
 md"""
 Last, as usual in machine learning implementations, we split a dataset into train and test sets. The function `train_test_split` does the job:
 
-"""
-
-# ╔═╡ 68ec7325-f03f-4b3b-9069-632af6aaa63d
-md"""
-!!! danger "Todo"
-	Implement the `train_test_split` function.
 """
 
 # ╔═╡ 0514cde6-b425-4fe7-ac1e-2678b64bbee5
@@ -1068,7 +1081,7 @@ end;
 
 # ╔═╡ c9a05a6e-90c3-465d-896c-74bbb429f66a
 md"""
-We can have a glimpse at a dataset image as follows:
+We can have a glimpse at the dataset, use the slider to visualize each tuple (image, weights, label path).
 """
 
 # ╔═╡ fd83cbae-638e-49d7-88da-588fe055c963
@@ -1125,12 +1138,6 @@ In the following, we will perturb or regularize the output of a neural network t
 
 !!! danger "Question"
 	In the general case, can we fix the maximum length of a feasible solution of the shortest path problem ? How ? Can we derive an dynamic programming algorithm based on this ?
-"""
-
-# ╔═╡ 3503abb4-4499-4355-85af-dfe76d69dac8
-md"""
-!!! danger "Todo"
-	Complete the following code to deal with negative cell costs.
 """
 
 # ╔═╡ f18ad74f-ef8b-4c70-8af3-e6dac8305dd0
@@ -1217,7 +1224,7 @@ end
 # ╔═╡ 76d4caa4-a10c-4247-a624-b6bfa5a743bc
 md"""
 !!! info "The maximizer function will depend on the pipeline"
-	Note that we use the function `grid_dijkstra` already implemented in the `GridGraphs.jl` package when we deal with non-negative cell costs. In the following, we will use either Dijkstra or Ford-Bellman algorithm depending on the learning pipeline. You will have to modify the `true_maximizer` function depending on the experience you do.
+	Note that we use the function `grid_dijkstra` already implemented in the `GridGraphs.jl` package when we deal with non-negative cell costs. In the following, we will use either Dijkstra or Ford-Bellman algorithm depending on the learning pipeline. You will have to modify the maximizer function to use depending on the experience you do.
 """
 
 # ╔═╡ 91ec470d-f2b5-41c1-a50f-fc337995c73f
@@ -1362,24 +1369,24 @@ The two following functions extend the shortest path cost ratio to a batch and a
 
 # ╔═╡ dd1791a8-fa59-4a36-8794-fccdcd7c912a
 begin
-"""
-    shortest_path_cost_ratio(model, batch)
-Compute the average cost ratio between computed and true shorest paths over `batch`. 
-"""
-function shortest_path_cost_ratio(model, batch)
-    return sum(shortest_path_cost_ratio(model, item[1], item[2], item[3]) for item in batch)/length(batch)
-end
+	"""
+	    shortest_path_cost_ratio(model, batch)
+	Compute the average cost ratio between computed and true shorest paths over `batch`. 
+	"""
+	function shortest_path_cost_ratio(model, batch)
+	    return sum(shortest_path_cost_ratio(model, item[1], item[2], item[3]) for item in batch)/length(batch)
+	end
 end
 
 # ╔═╡ 633e9fea-fba3-4fe6-bd45-d19f89cb1808
 begin
 	"""
-    shortest_path_cost_ratio(;model, dataset)
-Compute the average cost ratio between computed and true shorest paths over `dataset`. 
-"""
-function shortest_path_cost_ratio(;model, dataset)
-    return sum(shortest_path_cost_ratio(model, batch) for batch in dataset)/length(dataset)
-end
+	    shortest_path_cost_ratio(;model, dataset)
+	Compute the average cost ratio between computed and true shorest paths over `dataset`. 
+	"""
+	function shortest_path_cost_ratio(;model, dataset)
+	    return sum(shortest_path_cost_ratio(model, batch) for batch in dataset)/length(dataset)
+	end
 end
 
 # ╔═╡ 8c8b514e-8478-4b2b-b062-56832115c670
@@ -1405,7 +1412,7 @@ md"""
 # ╔═╡ 658bd4b9-ee97-4b81-9337-ee6d1ccdf7bb
 md"""
 !!! info "Preliminary remark"
-	Here come the specific learning experiments. The following code cells will have to be modified to deal with different settings (as well as the definition of the `true_maximizer` function and the one of the half square norm regularization above).
+	Here come the specific learning experiments. The following code cells will have to be modified to deal with different settings.
 """
 
 # ╔═╡ f1b50452-4e8c-4393-b112-7a4cfb3b7fb4
@@ -1425,17 +1432,21 @@ md"""
 
 # ╔═╡ f6949520-d10f-4bae-8d41-2ec880ac7484
 md"""
-In this framework, we use a perturbed maximizer to learn the parameters of the neural network. Given a maximization problem $y^*(\theta) := \operatorname{argmax}_{y \in \mathcal{C}} \langle y, \theta \rangle$, we define the additive perturbed maximization as:
+In this framework, we use a perturbed maximizer to learn the parameters of the neural network. Given a maximization problem $f(\theta) := \operatorname{argmax}_{y \in \mathcal{C}} \langle y, \theta \rangle$, we define the additive perturbed maximization as:
 """
 
 # ╔═╡ 9bef7690-0db3-4ba5-be77-0933ceb6215e
 md"""
-$y^+_\varepsilon (\theta) := \mathbb{E}_{Z}\big[ \operatorname{argmax}_{y \in \mathcal{C}} \langle y, \theta + \varepsilon Z \rangle \big]$ 
+```math
+\hat{f}^+_\varepsilon (\theta) := \mathbb{E}_{Z}\big[ \underset{y \in \mathcal{C}}{\mathrm{argmax}} (\theta + \varepsilon Z)^\top y \big]
+```
 """
 
 # ╔═╡ c872d563-421c-4581-a8fa-a02cee58bc85
 md"""
-$F^+_\varepsilon (\theta) := \mathbb{E}_{Z}\big[ \operatorname{max}_{y \in \mathcal{C}} \langle y, \theta + \varepsilon Z \rangle \big]$ 
+```math
+$F^+_\varepsilon (\theta) := \mathbb{E}_{Z}\big[ \max_{y \in \mathcal{C}} (\theta + \varepsilon Z)^\top y \big]$ 
+```
 """
 
 # ╔═╡ 4d50d263-eca0-48ad-b32c-9b767cc57914
@@ -1461,10 +1472,10 @@ md"""
 	What are the properties of $L_\varepsilon^+ (\theta, y)$ ?
 """
 
-# ╔═╡ c10844d0-8328-42db-b49c-23713b9d88c6
+# ╔═╡ 6293fde0-3cfc-4d0d-bed6-74caa54b6ead
 md"""
-!!! danger "Todo"
-	Based on part I-III, run the end of the notebook to train and test the pipeline learning by imitation with additive perturbation and Fenchel-Young loss.
+!!! note "How to implement it ?"
+	The Fenchel-Young loss with additive perturbation is implemented below, using `FenchelYoungLoss` and `PerturbedAdditive` implemented in `InferOpt.jl`.
 """
 
 # ╔═╡ 9a9b3942-72f2-4c9e-88a5-af927634468c
@@ -1493,13 +1504,19 @@ md"""
 We omit the details of the loss derivations and concentrate on implementation.
 
 !!! danger "Todo"
-	Modify the code below to learn by imitation with multiplicative perturbation using [`InferOpt.jl`](https://axelparmentier.github.io/InferOpt.jl/dev/) package.
+	You can modify the previous additive implementation below, by replacing the `PerturbedAdditive` regularization with a `PerturbedMultiplicative` one. You can also modify use `dijkstra_maximizer` instead of `belmann_maximizer` as the `true_maximizer`, which runs faster.
+"""
 
+# ╔═╡ 0fd29811-9e17-4c97-b9b7-ec9cc51b435f
+md"""
+## 3) Smart Predict then optimize
+
+TODO
 """
 
 # ╔═╡ 90a47e0b-b911-4728-80b5-6ed74607833d
 md"""
-### 3) Learning by experience with multiplicative perturbation
+### 4) Learning by experience with multiplicative perturbation
 """
 
 # ╔═╡ 5d79b8c1-beea-4ff9-9830-0f5e1c4ef29f
@@ -1515,7 +1532,7 @@ When we restrict the train dataset to images $I$ and black-box cost functions $c
 
 # ╔═╡ a5bfd185-aa77-4e46-a6b6-d43c4785a7fa
 md"""
-### 4) Learning by experience with half square norm regularization (bonus). 
+### 5) Learning by experience with half square norm regularization (bonus). 
 """
 
 # ╔═╡ a7b6ecbd-1407-44dd-809e-33311970af12
@@ -1546,7 +1563,7 @@ We first define the hyper-parameters for the learning process. They include:
 begin 
 	ε = 0.05
 	M = 20
-	nb_epochs = 25
+	nb_epochs = 50
 	batch_size = 80
 	lr_start = 0.001
 	options = (ε=ε, M=M, nb_epochs=nb_epochs, nb_samples=nb_samples, batch_size = batch_size, lr_start = lr_start)
@@ -1567,6 +1584,17 @@ md"""
 	
 	Its definition depends on the learning setting we consider.
 """
+
+# ╔═╡ 1337513f-995f-4dfa-827d-797a5d2e5e1a
+begin
+	true_maximizer = bellman_maximizer
+	pipeline = (
+	    encoder=deepcopy(initial_encoder),
+	    maximizer=identity, # TODO: remove that ?? more confusing than anything else
+		loss = FenchelYoungLoss(PerturbedAdditive(true_maximizer; ε=options.ε, nb_samples=options.M)),
+		#loss=SPOPlusLoss(bellman_maximizer)
+	)
+end
 
 # ╔═╡ 26c71a94-5b30-424f-8242-c6510d41bb52
 begin 
@@ -1639,13 +1667,13 @@ From the generic definition of the pipeline we define a loss function compatible
 begin
 	(; encoder, maximizer, loss) = pipeline
 	# For learning by imitation
-	#flux_loss_point(x, y, kwargs) = loss(maximizer(encoder(x)), y; fw_kwargs = (max_iteration=50,))
+	flux_loss_point(x, y, kwargs) = loss(maximizer(encoder(x)), y; fw_kwargs = (max_iteration=50,))
 
 	# For learning by experience
 	#flux_loss_point(x, y, kwargs) = loss(maximizer(encoder(x)); c_true = #kwargs.wg.weights, fw_kwargs = (max_iteration=50,))
 
 	# For SPO+ loss
-	flux_loss_point(x, y, kwargs) = loss(maximizer(encoder(x)), -kwargs.wg.weights, y)
+	#flux_loss_point(x, y, kwargs) = loss(maximizer(encoder(x)), -kwargs.wg.weights, y)
 
 	flux_loss_batch(batch) = sum(flux_loss_point(item[1], item[2], item[3]) for item in batch)
 end
@@ -1693,7 +1721,7 @@ To assess performance, we can compare the true and predicted paths.
 # ╔═╡ eb3a6009-e181-443c-bb77-021e867030e4
 md"""
 !!! info "Visualize the model performance"
-	We now want to see the effect of the learning process on the predicted costs and shortest paths.
+	We now want to see the effect of the learning process on the predicted costs and shortest paths. Use the slider to swipe through the test dataset.
 """
 
 # ╔═╡ 521f5ffa-2c22-44c5-8bdb-67410431ca2e
@@ -1744,54 +1772,22 @@ md"""
 ### For more information
 
 - **Main package:** <https://github.com/axelparmentier/InferOpt.jl>
-- **This notebook:** <https://gdalle.github.io/InferOpt-JuliaCon2022/>
-- Paper coming soon
+- **This notebook:** <https://github.com/BatyLeo/InferOpt-CERMICS2022>
+- Our paper on ArXiV: https://arxiv.org/abs/2207.13513
 
-More application examples:
-- **Single machine scheduling:** <https://github.com/axelparmentier/SingleMachineScheduling.jl>
-- **Two stage spanning tree:** <https://github.com/axelparmentier/MinimumWeightTwoStageSpanningTree.jl>
+Detailed application examples:
 - **Shortest paths on Warcraft maps:** <https://github.com/LouisBouvier/WarcraftShortestPaths.jl>
 - **Stochastic vehicle scheduling:** <https://github.com/BatyLeo/StochasticVehicleScheduling.jl>
+- **Single machine scheduling:** <https://github.com/axelparmentier/SingleMachineScheduling.jl>
+- **Two stage spanning tree:** <https://github.com/axelparmentier/MinimumWeightTwoStageSpanningTree.jl>
 """
-
-# ╔═╡ 9153d21d-709a-4619-92cc-82269e167c0c
-# ╠═╡ disabled = true
-#=╠═╡
-begin
-		"""
-	    true_maximizer(θ::AbstractMatrix{R}; kwargs...) where {R<:Real}
-	Compute the shortest path from top-left corner to down-right corner on a gridgraph of the size of `θ` as an argmax.
-	The weights of the arcs are given by the opposite of the values of `θ` related 
-	to their destination nodes. We use GridGraphs, implemented 
-	in [GridGraphs.jl](https://github.com/gdalle/GridGraphs.jl).
-	"""
-	function true_maximizer(θ::AbstractMatrix{R}; kwargs...) where {R<:Real}
-	    g = GridGraph(-θ)
-	    path = grid_bellman_ford_warcraft(g, 1, nv(g))
-	    #path = grid_dijkstra(g, 1, nv(g))
-	    y = path_to_matrix(g, path)
-	    return y
-	end
-end
-  ╠═╡ =#
-
-# ╔═╡ 1337513f-995f-4dfa-827d-797a5d2e5e1a
-begin
-	true_maximizer = bellman_maximizer
-	pipeline = (
-	    encoder=deepcopy(initial_encoder),
-	    maximizer=identity, # TODO: remove that ?? more confusing than anything else
-		#loss = FenchelYoungLoss(PerturbedAdditive(true_maximizer; ε=options.ε, nb_samples=options.M)),
-		loss=SPOPlusLoss(bellman_maximizer)
-	)
-end
 
 # ╔═╡ Cell order:
 # ╟─e279878d-9c8d-47c8-9453-3aee1118818b
 # ╟─8b7876e4-2f28-42f8-87a1-459b665cff30
 # ╟─6160785a-d455-40b4-ab74-e61c46e31537
 # ╟─a0d14396-cb6a-4f35-977a-cf3b63b44d9e
-# ╠═b5b0bb58-9e02-4551-a9ba-0ba0ffceb350
+# ╟─b5b0bb58-9e02-4551-a9ba-0ba0ffceb350
 # ╟─2182d4d2-6506-4fd6-936f-0e7c30d73851
 # ╟─1f0c5b88-f903-4a67-9581-b3a07c504d5c
 # ╟─a8d0f8be-01a8-4a2a-84e3-ca16e7ef5203
@@ -1817,6 +1813,7 @@ end
 # ╟─64c69987-6416-488b-8b7f-55d48771184d
 # ╟─aac53339-1091-4308-8d61-5ab4d3334c26
 # ╟─16963349-5467-4019-be3d-d1b5375cf90e
+# ╠═1574b408-cf50-4c57-9fb8-eaa22bb3ece1
 # ╟─400867ad-11e6-411b-8b1f-c64685630fdc
 # ╟─dda2e192-36fa-418b-8f4e-4cb3afd69360
 # ╟─5764e92d-7fc4-4b62-a709-79979fb4b90c
@@ -1830,7 +1827,7 @@ end
 # ╟─95f96123-2bcf-4935-9738-e0efd42a0daf
 # ╟─5de471fa-4806-4b74-a1af-0cb25d81ba91
 # ╟─e9d1aee8-b312-4540-8179-e9648e59fc53
-# ╟─f8a2cace-50e1-4d5f-86b6-91c820bace26
+# ╠═f8a2cace-50e1-4d5f-86b6-91c820bace26
 # ╟─c59d4022-fdd5-469f-8fb1-abbcb6a81c8a
 # ╟─fde5498e-3d07-4276-b5d7-263c44d29da1
 # ╟─44039f2f-a1d8-4370-98b0-b7985d7d65bd
@@ -1843,6 +1840,7 @@ end
 # ╟─0fc739a0-661f-4fca-8e61-b20779c537ff
 # ╟─fb287847-98a8-4c64-9674-749f7ec22f24
 # ╟─a3907487-a5bb-4e35-a444-be0868bef029
+# ╟─c72435b7-59ae-4f77-86fb-feb175ba88e6
 # ╟─6801811b-f68a-43b4-8b78-2f27c0dc6331
 # ╟─3a84fd20-41fa-4156-9be5-a0371754b394
 # ╟─b7ef70d9-2b93-448a-b916-46655a857c8b
@@ -1863,7 +1861,6 @@ end
 # ╟─c18d4b8f-2ae1-4fde-877b-f53823a42ab1
 # ╟─8c8bb6a1-12cd-4af3-b573-c22383bdcdfb
 # ╟─4a9ed677-e294-4194-bf32-9580d1e47bda
-# ╟─68ec7325-f03f-4b3b-9069-632af6aaa63d
 # ╟─0514cde6-b425-4fe7-ac1e-2678b64bbee5
 # ╟─caf02d68-3418-4a6a-ae25-eabbbc7cae3f
 # ╟─61db4159-84cd-4e3d-bc1e-35b35022b4be
@@ -1884,11 +1881,9 @@ end
 # ╟─7b653840-6292-4e6b-a6d6-91aadca3f6d4
 # ╟─487eb4f1-cd50-47a7-8d61-b141c1b272f0
 # ╟─654066dc-98fe-4c3b-92a9-d09efdfc8080
-# ╟─3503abb4-4499-4355-85af-dfe76d69dac8
 # ╟─f18ad74f-ef8b-4c70-8af3-e6dac8305dd0
 # ╟─dc359052-19d9-4f29-903c-7eb9b210cbcd
-# ╠═b93009a7-533f-4c5a-a4f5-4c1d88cc1be4
-# ╠═9153d21d-709a-4619-92cc-82269e167c0c
+# ╟─b93009a7-533f-4c5a-a4f5-4c1d88cc1be4
 # ╠═20999544-cefd-4d00-a68c-cb6cfea36b1a
 # ╠═b2ea7e31-82c6-4b01-a8c6-26c3d7a2d562
 # ╟─76d4caa4-a10c-4247-a624-b6bfa5a743bc
@@ -1929,12 +1924,13 @@ end
 # ╟─e4b13e58-2d54-47df-b865-95ae2946756a
 # ╟─9c05cae5-af20-4f63-99c9-86032358ffd3
 # ╟─d2e5f60d-199a-41f5-ba5d-d21ab2030fb8
-# ╟─c10844d0-8328-42db-b49c-23713b9d88c6
+# ╟─6293fde0-3cfc-4d0d-bed6-74caa54b6ead
 # ╟─9a9b3942-72f2-4c9e-88a5-af927634468c
 # ╟─1ff198ea-afd5-4acc-bb67-019051ff149b
 # ╟─44ece9ce-f9f1-46f3-90c6-cb0502c92c67
 # ╟─5d8d34bb-c207-40fc-ab10-c579e7e2d04c
 # ╟─43d68541-84a5-4a63-9d8f-43783cc27ccc
+# ╠═0fd29811-9e17-4c97-b9b7-ec9cc51b435f
 # ╟─90a47e0b-b911-4728-80b5-6ed74607833d
 # ╟─5d79b8c1-beea-4ff9-9830-0f5e1c4ef29f
 # ╟─a5bfd185-aa77-4e46-a6b6-d43c4785a7fa
