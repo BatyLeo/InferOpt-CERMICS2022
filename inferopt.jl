@@ -219,8 +219,8 @@ fig = TikzPicture(
 fig2 = TikzPicture(
 	L"""
 	\tikzset{node/.style={fill=red!10, shape=rectangle, draw=black, minimum width=100, minimum height=40, font=\LARGE, line width=1.5}}
-	\node[node] (t) at (0, 0) {$t$};
-	\node[node] (u) at (7, 0) {$u$};
+	\node[node] (t) at (0, 0) {$u$};
+	\node[node] (u) at (7, 0) {$t$};
 	\node[] (time1) at (-2, -1) {};
 	\node[] (time2) at (9, -1) {};
 	\draw[<->, line width=1.5] (t) edge node[below]{slack $\Delta_{u,t}$} (u);
@@ -341,10 +341,11 @@ md"""
 md"""
 ## Many possible applications
 
-- Shortest paths on Warcraft maps $\impliedby$ **today**.
-- Stochastic Vehicle Scheduling $\impliedby$ **today**.
-- Two-stage Minimum Spanning Tree $\impliedby$ see satellite packages.
-- Single-machine scheduling $\impliedby$ see satellite packages.
+- Shortest paths on Warcraft maps
+- Stochastic Vehicle Scheduling
+- Two-stage Minimum Spanning Tree
+- Single-machine scheduling
+- etc.
 """
 
 # ╔═╡ 3277f951-dd62-4fd0-be19-82c4572b6361
@@ -515,12 +516,23 @@ begin
 	plot(vspheuristic, vspexperience, layout = (1,2), ticks = nothing, border = nothing, size = (800, 300))
 end
 
-# ╔═╡ 51816e1d-f49c-4e9b-a8de-1b09f10ad44c
+# ╔═╡ f8a2cace-50e1-4d5f-86b6-91c820bace26
 md"""
-TODO
+TODO more detailed results
+"""
 
-- spanning tree
-- scheduling
+# ╔═╡ c59d4022-fdd5-469f-8fb1-abbcb6a81c8a
+md"""
+## Two stage minimum weight spanning tree
+
+TODO
+"""
+
+# ╔═╡ fde5498e-3d07-4276-b5d7-263c44d29da1
+md"""
+## Single machine scheduling problem
+
+TODO
 """
 
 # ╔═╡ 44039f2f-a1d8-4370-98b0-b7985d7d65bd
@@ -691,10 +703,10 @@ md"""
 # ╔═╡ a3907487-a5bb-4e35-a444-be0868bef029
 begin
 	set_ε_pert = md"""
-	``\varepsilon = `` $(@bind ε_pert Slider(0.:0.01:1; default=0.0, show_value=true))
+	``\varepsilon = `` $(@bind ε_pert Slider(0.0:0.01:1; default=0.0, show_value=true))
 	"""
 	set_nb_samples_pert = md"""
-	``M = `` $(@bind nb_samples_pert Slider(2:100; default=10, show_value=true))
+	``M = `` $(@bind nb_samples_pert Slider(1:100; default=10, show_value=true))
 	"""
 	TwoColumn(set_ε_pert, set_nb_samples_pert)
 end
@@ -703,11 +715,11 @@ end
 perturbed = PerturbedAdditive(polytope_maximizer; ε=ε_pert, nb_samples=nb_samples_pert, seed=0);
 
 # ╔═╡ 0fc739a0-661f-4fca-8e61-b20779c537ff
-plot_polytope(α_pert, perturbed; title="Perturbed")
+plot_polytope(α_pert, perturbed; title="")
 
 # ╔═╡ 6801811b-f68a-43b4-8b78-2f27c0dc6331
 md"""
-## Fenchel-Young loss
+## Fenchel-Young loss (learning by imitation)
 Natural non-negative & convex loss based on regularization:
 ```math
 \boxed{
@@ -744,9 +756,9 @@ The question is: how should we combine these features?
 We use `InferOpt` to learn the appropriate costs.
 """
 
-# ╔═╡ 2c9cd5e1-163c-48a7-b15e-63dcb791c750
+# ╔═╡ 5c231f46-02b0-43f9-9101-9eb222cff972
 begin
-	pipeline_image = imresize(load("./illustrations/warcraft_pipeline.pdf"), ratio=2)
+	load("./images/Warcraft/warcraft_pipeline.png")
 end
 
 # ╔═╡ 94192d5b-c4e9-487f-a36d-0261d9e86801
@@ -894,7 +906,7 @@ md"""
 
 # ╔═╡ 61db4159-84cd-4e3d-bc1e-35b35022b4be
 md"""
-In the following cell, we define utility plot functions to have a glimpse at images, cell costs and paths. Their implementation is not at the core of this TP, they are thus hidden.
+In the following cell, we define utility plot functions to have a glimpse at images, cell costs and paths. Their implementation is not at the core of this tutorial, they are thus hidden.
 """
 
 # ╔═╡ 08ea0d7e-2ffe-4f2e-bd8c-f15f9af0f35b
@@ -976,14 +988,14 @@ begin
 	"""
 	function plot_weights_path(;weights, path, weight_title="Weights", path_title="Path")
 	    p1 = Plots.heatmap(
-		        weights;
-		        yflip=true,
-		        aspect_ratio=:equal,
-		        framestyle=:none,
-		        padding=(0., 0.),
-		        size=(500, 500),
-				legend = false,
-				title = weight_title
+			weights;
+			yflip=true,
+			aspect_ratio=:equal,
+			framestyle=:none,
+			padding=(0., 0.),
+			size=(500, 500),
+			legend = false,
+			title = weight_title
 		)
 	    p2 = Plots.plot(
 	        Gray.(path .* 0.7);
@@ -1030,7 +1042,7 @@ begin
 	    isnothing(filepath) || Plots.savefig(pl, filepath)
 	    return pl
 	end
-end
+			end;
 
 # ╔═╡ d58098e8-bba5-445c-b1c3-bfb597789916
 md"""
@@ -1186,22 +1198,20 @@ md"""
 Now that we have defined and implemented an algorithm to deal with the shortest path problem, we wrap it in a maximizer function to match the generic framework of structured prediction.
 """
 
-# ╔═╡ 9153d21d-709a-4619-92cc-82269e167c0c
-begin
-		"""
-	    true_maximizer(θ::AbstractMatrix{R}; kwargs...) where {R<:Real}
-	Compute the shortest path from top-left corner to down-right corner on a gridgraph of the size of `θ` as an argmax.
-	The weights of the arcs are given by the opposite of the values of `θ` related 
-	to their destination nodes. We use GridGraphs, implemented 
-	in [GridGraphs.jl](https://github.com/gdalle/GridGraphs.jl).
-	"""
-	function true_maximizer(θ::AbstractMatrix{R}; kwargs...) where {R<:Real}
-	    g = GridGraph(-θ)
-	    path = grid_bellman_ford_warcraft(g, 1, nv(g))
-	    #path = grid_dijkstra(g, 1, nv(g))
-	    y = path_to_matrix(g, path)
-	    return y
-	end
+# ╔═╡ 20999544-cefd-4d00-a68c-cb6cfea36b1a
+function dijkstra_maximizer(θ::AbstractMatrix{<:Real}; kwargs...)
+	g = GridGraph(-θ)
+	path = grid_dijkstra(g, 1, nv(g))
+	y = path_to_matrix(g, path)
+	return y
+end
+
+# ╔═╡ b2ea7e31-82c6-4b01-a8c6-26c3d7a2d562
+function bellman_maximizer(θ::AbstractMatrix{<:Real}; kwargs...)
+	g = GridGraph(-θ)
+	path = grid_bellman_ford_warcraft(g, 1, nv(g))
+	y = path_to_matrix(g, path)
+	return y
 end
 
 # ╔═╡ 76d4caa4-a10c-4247-a624-b6bfa5a743bc
@@ -1300,7 +1310,7 @@ We can build the encoder in this way:
 """
 
 # ╔═╡ d9f5281b-f34b-485c-a781-804b8472e38c
-create_warcraft_embedding()
+initial_encoder = create_warcraft_embedding()
 
 # ╔═╡ 9782f5fb-7e4b-4d8a-a77a-e4f5b9a71ab5
 md"""
@@ -1344,24 +1354,6 @@ md"""
 	Complete the following code to define the `shortest_path_cost_ratio` function. The candidate path $\hat{y}$ is given by the output of `model` applied on image `x`, and `y` is the target shortest path.
 """
 
-# ╔═╡ 26c71a94-5b30-424f-8242-c6510d41bb52
-begin 
-	"""
-    shortest_path_cost_ratio(model, x, y, kwargs)
-Compute the ratio between the cost of the solution given by the `model` cell costs and the cost of the true solution.
-We evaluate both the shortest path with respect to the weights given by `model(x)` and the labelled shortest path `y`
-using the true cell costs stored in `kwargs.wg.weights`. 
-This ratio is by definition greater than one. The closer it is to one, the better is the solution given by the current 
-weights of `model`. We thus track this metric during training.
-"""
-function shortest_path_cost_ratio(model, x, y, kwargs)
-    true_weights = kwargs.wg.weights
-    θ_computed = model(x)
-    shortest_path_computed = true_maximizer(θ_computed)
-    return dot(true_weights, shortest_path_computed)/dot(y, true_weights)
-end
-end
-
 # ╔═╡ b25f438f-832c-4717-bb73-acbb22aec384
 md"""
 The two following functions extend the shortest path cost ratio to a batch and a dataset.
@@ -1404,45 +1396,6 @@ We now consider the generic learning function. We want to minimize a given `flux
 md"""
 The following block defines the generic learning function.
 """
-
-# ╔═╡ a6a56523-90c9-40d2-9b68-26e20c1a5527
-begin 
-	"""
-	    train_function!(;encoder, flux_loss, train_dataset, test_dataset, options::NamedTuple)
-	Train `encoder` model over `train_dataset` and test on `test_dataset` by minimizing `flux_loss` loss. 
-	This training involves differentiation through argmax with perturbed maximizers, using [InferOpt](https://github.com/axelparmentier/InferOpt.jl) package.
-	The task is to learn the best parameters for the `encoder`, so that when solving the shortest path problem with its output cell costs, the 
-	given solution is close to the labelled shortest path corresponding to the input Warcraft terrain image.
-	Hyperparameters are passed with `options`. During training, the average train and test losses are stored, as well as the average 
-	cost ratio computed with [`shortest_path_cost_ratio`](@ref) both on the train and test datasets.
-	"""
-	function train_function!(;encoder, flux_loss, train_dataset, test_dataset, options::NamedTuple)
-	    # Store the train loss
-	    losses = Matrix{Float64}(undef, options.nb_epochs, 2)
-	    cost_ratios = Matrix{Float64}(undef, options.nb_epochs, 2)
-	    # Optimizer
-	    opt = ADAM(options.lr_start)
-	    # model parameters
-	    par = Flux.params(encoder)
-	    # Train loop
-	    @progress "Training epoch: " for epoch in 1:options.nb_epochs
-	        for batch in train_dataset
-	            batch_loss = 0
-	            gs = gradient(par) do
-	                batch_loss = flux_loss(batch)
-	            end
-	            losses[epoch, 1] += batch_loss
-	            Flux.update!(opt, par, gs)
-	        end
-	        losses[epoch, 1] = losses[epoch, 1]/(options.nb_samples*0.8)
-	        losses[epoch, 2] = sum([flux_loss(batch) for batch in test_dataset])/(options.nb_samples*0.2)
-	        cost_ratios[epoch, 1] = shortest_path_cost_ratio(model = encoder, dataset = train_dataset)
-	        cost_ratios[epoch, 2] = shortest_path_cost_ratio(model = encoder, dataset = test_dataset)
-	    end
-	     return losses, cost_ratios
-	end
-
-end
 
 # ╔═╡ 920d94cd-bfb5-4c02-baa3-f346d5c95e2e
 md"""
@@ -1593,8 +1546,8 @@ We first define the hyper-parameters for the learning process. They include:
 begin 
 	ε = 0.05
 	M = 20
-	nb_epochs = 50
-	batch_size = 1
+	nb_epochs = 25
+	batch_size = 80
 	lr_start = 0.001
 	options = (ε=ε, M=M, nb_epochs=nb_epochs, nb_samples=nb_samples, batch_size = batch_size, lr_start = lr_start)
 end
@@ -1615,14 +1568,61 @@ md"""
 	Its definition depends on the learning setting we consider.
 """
 
-# ╔═╡ 1337513f-995f-4dfa-827d-797a5d2e5e1a
-begin
-	pipeline = (
-	    encoder=create_warcraft_embedding(),
-	    maximizer=identity,
-		loss = FenchelYoungLoss(PerturbedAdditive(true_maximizer; ε=options.ε, nb_samples=options.M)),
-		#loss=SPOPlusLoss(true_maximizer)
-	)
+# ╔═╡ 26c71a94-5b30-424f-8242-c6510d41bb52
+begin 
+	"""
+	    shortest_path_cost_ratio(model, x, y, kwargs)
+	Compute the ratio between the cost of the solution given by the `model` cell costs and the cost of the true solution.
+	We evaluate both the shortest path with respect to the weights given by `model(x)` and the labelled shortest path `y`
+	using the true cell costs stored in `kwargs.wg.weights`. 
+	This ratio is by definition greater than one. The closer it is to one, the better is the solution given by the current 
+	weights of `model`. We thus track this metric during training.
+	"""
+	function shortest_path_cost_ratio(model, x, y, kwargs)
+	    true_weights = kwargs.wg.weights
+	    θ_computed = model(x)
+	    shortest_path_computed = true_maximizer(θ_computed)
+	    return dot(true_weights, shortest_path_computed)/dot(y, true_weights)
+	end
+end
+
+# ╔═╡ a6a56523-90c9-40d2-9b68-26e20c1a5527
+begin 
+	"""
+	    train_function!(;encoder, flux_loss, train_dataset, test_dataset, options::NamedTuple)
+	Train `encoder` model over `train_dataset` and test on `test_dataset` by minimizing `flux_loss` loss. 
+	This training involves differentiation through argmax with perturbed maximizers, using [InferOpt](https://github.com/axelparmentier/InferOpt.jl) package.
+	The task is to learn the best parameters for the `encoder`, so that when solving the shortest path problem with its output cell costs, the 
+	given solution is close to the labelled shortest path corresponding to the input Warcraft terrain image.
+	Hyperparameters are passed with `options`. During training, the average train and test losses are stored, as well as the average 
+	cost ratio computed with [`shortest_path_cost_ratio`](@ref) both on the train and test datasets.
+	"""
+	function train_function!(; encoder, flux_loss, train_dataset, test_dataset, options::NamedTuple)
+	    # Store the train loss
+	    losses = Matrix{Float64}(undef, options.nb_epochs, 2)
+	    cost_ratios = Matrix{Float64}(undef, options.nb_epochs, 2)
+	    # Optimizer
+	    opt = ADAM(options.lr_start)
+	    # model parameters
+	    par = Flux.params(encoder)
+	    # Train loop
+	    @progress "Training epoch: " for epoch in 1:options.nb_epochs
+	        for batch in train_dataset
+	            batch_loss = 0
+	            gs = gradient(par) do
+	                batch_loss = flux_loss(batch)
+	            end
+	            losses[epoch, 1] += batch_loss
+	            Flux.update!(opt, par, gs)
+	        end
+	        losses[epoch, 1] = losses[epoch, 1]/(options.nb_samples*0.8)
+	        losses[epoch, 2] = sum([flux_loss(batch) for batch in test_dataset])/(options.nb_samples*0.2)
+	        cost_ratios[epoch, 1] = shortest_path_cost_ratio(model = encoder, dataset = train_dataset)
+	        cost_ratios[epoch, 2] = shortest_path_cost_ratio(model = encoder, dataset = test_dataset)
+	    end
+	     return losses, cost_ratios
+	end
+
 end
 
 # ╔═╡ f5e789b2-a62e-4818-90c3-76f39ea11aaa
@@ -1638,9 +1638,15 @@ From the generic definition of the pipeline we define a loss function compatible
 # ╔═╡ e9df3afb-fa04-440f-9664-3496da85696b
 begin
 	(; encoder, maximizer, loss) = pipeline
+	# For learning by imitation
+	#flux_loss_point(x, y, kwargs) = loss(maximizer(encoder(x)), y; fw_kwargs = (max_iteration=50,))
+
+	# For learning by experience
 	#flux_loss_point(x, y, kwargs) = loss(maximizer(encoder(x)); c_true = #kwargs.wg.weights, fw_kwargs = (max_iteration=50,))
-	flux_loss_point(x, y, kwargs) = loss(maximizer(encoder(x)), y; fw_kwargs = (max_iteration=50,))
-	#flux_loss_point(x, y, kwargs) = loss(maximizer(encoder(x)), -kwargs.wg.weights)
+
+	# For SPO+ loss
+	flux_loss_point(x, y, kwargs) = loss(maximizer(encoder(x)), -kwargs.wg.weights, y)
+
 	flux_loss_batch(batch) = sum(flux_loss_point(item[1], item[2], item[3]) for item in batch)
 end
 
@@ -1655,16 +1661,16 @@ Given the specific pipeline and loss, we can apply our generic train function to
 """
 
 # ╔═╡ 83a14158-33d1-4f16-85e1-2726c8fbbdfc
-# begin
-# 	Losses, Cost_ratios = train_function!(;
-# 	    encoder=encoder,
-# 	    flux_loss = flux_loss_batch,
-# 	    train_dataset=Flux.DataLoader(train_dataset; batchsize=batch_size),
-# 	    test_dataset = Flux.DataLoader(test_dataset; batchsize=length(test_dataset)),
-# 	    options=options,
-# 	)
-# 	Gaps = (Cost_ratios .- 1) .* 100
-# end;
+begin
+	Losses, Cost_ratios = train_function!(;
+	    encoder=encoder,
+	    flux_loss = flux_loss_batch,
+	    train_dataset=Flux.DataLoader(train_dataset; batchsize=batch_size),
+	    test_dataset = Flux.DataLoader(test_dataset; batchsize=length(test_dataset)),
+	    options=options,
+	)
+	Gaps = (Cost_ratios .- 1) .* 100
+end;
 
 # ╔═╡ 4b31dca2-0195-4899-8a3a-e9772fabf495
 md"""
@@ -1677,9 +1683,7 @@ Loss and gap over epochs, train and test datasets.
 """
 
 # ╔═╡ 66d385ba-9c6e-4378-b4e0-e54a4df346a5
-begin
-	plot_loss_and_gap(Losses, Gaps, options)
-end
+plot_loss_and_gap(Losses, Gaps, options)
 
 # ╔═╡ db799fa2-0e48-43ee-9ee1-80ff8d2e5de7
 md"""
@@ -1694,11 +1698,13 @@ md"""
 
 # ╔═╡ 521f5ffa-2c22-44c5-8bdb-67410431ca2e
 begin
-	container = []
+	test_predictions = []
 	for (x, y, k) in test_dataset
+		θ0 = initial_encoder(x)
+		y0 = UInt8.(true_maximizer(θ0))
 		θp = encoder(x)
 		yp = UInt8.(true_maximizer(θp))
-		push!(container, (x, y, k, θp, yp))
+		push!(test_predictions, (x, y, k, θ0, y0, θp, yp))
 	end
 end
 
@@ -1709,7 +1715,7 @@ md"""
 
 # ╔═╡ 842bf89d-45eb-462d-ba74-ca260a8b177d
 begin
-	x_test, y_test, kwargs_test, θpred, ypred = container[j]
+	x_test, y_test, kwargs_test, θini, yini, θpred, ypred = test_predictions[j]
 	plot_map(dropdims(x_test; dims=4))
 end
 
@@ -1718,6 +1724,15 @@ plot_weights_path(weights=kwargs_test.wg.weights, path=y_test, weight_title="Tru
 
 # ╔═╡ 4a3630ca-c8dd-4e81-8ee2-bb0fc6b01a93
 plot_weights_path(weights=-θpred, path=ypred, weight_title="Predicted weight", path_title="Predicted path")
+
+# ╔═╡ e2b38ec3-2de9-49f1-b29a-e746014e4fe1
+plot_weights_path(weights=-θini, path=yini, weight_title="Initial predicted weight", path_title="Initial predicted path")
+
+# ╔═╡ cfc02683-589b-44dc-a126-257703ed5f85
+(minimum(-θpred), maximum(-θpred))
+
+# ╔═╡ 4caa7341-8750-44ec-ba4e-4d425836996d
+(minimum(-θini), maximum(-θini))
 
 # ╔═╡ d56a9e90-b0f6-4bde-8b3b-ebf1d962f6b4
 md"""
@@ -1738,6 +1753,38 @@ More application examples:
 - **Shortest paths on Warcraft maps:** <https://github.com/LouisBouvier/WarcraftShortestPaths.jl>
 - **Stochastic vehicle scheduling:** <https://github.com/BatyLeo/StochasticVehicleScheduling.jl>
 """
+
+# ╔═╡ 9153d21d-709a-4619-92cc-82269e167c0c
+# ╠═╡ disabled = true
+#=╠═╡
+begin
+		"""
+	    true_maximizer(θ::AbstractMatrix{R}; kwargs...) where {R<:Real}
+	Compute the shortest path from top-left corner to down-right corner on a gridgraph of the size of `θ` as an argmax.
+	The weights of the arcs are given by the opposite of the values of `θ` related 
+	to their destination nodes. We use GridGraphs, implemented 
+	in [GridGraphs.jl](https://github.com/gdalle/GridGraphs.jl).
+	"""
+	function true_maximizer(θ::AbstractMatrix{R}; kwargs...) where {R<:Real}
+	    g = GridGraph(-θ)
+	    path = grid_bellman_ford_warcraft(g, 1, nv(g))
+	    #path = grid_dijkstra(g, 1, nv(g))
+	    y = path_to_matrix(g, path)
+	    return y
+	end
+end
+  ╠═╡ =#
+
+# ╔═╡ 1337513f-995f-4dfa-827d-797a5d2e5e1a
+begin
+	true_maximizer = bellman_maximizer
+	pipeline = (
+	    encoder=deepcopy(initial_encoder),
+	    maximizer=identity, # TODO: remove that ?? more confusing than anything else
+		#loss = FenchelYoungLoss(PerturbedAdditive(true_maximizer; ε=options.ε, nb_samples=options.M)),
+		loss=SPOPlusLoss(bellman_maximizer)
+	)
+end
 
 # ╔═╡ Cell order:
 # ╟─e279878d-9c8d-47c8-9453-3aee1118818b
@@ -1783,12 +1830,14 @@ More application examples:
 # ╟─95f96123-2bcf-4935-9738-e0efd42a0daf
 # ╟─5de471fa-4806-4b74-a1af-0cb25d81ba91
 # ╟─e9d1aee8-b312-4540-8179-e9648e59fc53
-# ╠═51816e1d-f49c-4e9b-a8de-1b09f10ad44c
+# ╟─f8a2cace-50e1-4d5f-86b6-91c820bace26
+# ╟─c59d4022-fdd5-469f-8fb1-abbcb6a81c8a
+# ╟─fde5498e-3d07-4276-b5d7-263c44d29da1
 # ╟─44039f2f-a1d8-4370-98b0-b7985d7d65bd
 # ╟─87040fd6-bd1a-47dd-875c-2caf5b50d2ce
 # ╟─79aa1f6b-553f-4873-925c-4db728f9f9eb
-# ╟─97d09291-910c-4c91-bc02-5c911c31a9a3
 # ╟─00cbb51e-75ca-46ae-8c0e-fce1182a3f8f
+# ╟─97d09291-910c-4c91-bc02-5c911c31a9a3
 # ╟─53f7468d-0015-4339-8e27-48812f541329
 # ╟─3db85997-e3f2-47b8-aa73-94080197be05
 # ╟─0fc739a0-661f-4fca-8e61-b20779c537ff
@@ -1798,7 +1847,7 @@ More application examples:
 # ╟─3a84fd20-41fa-4156-9be5-a0371754b394
 # ╟─b7ef70d9-2b93-448a-b916-46655a857c8b
 # ╟─ee87d357-318f-40f1-a82a-fe680286e6cd
-# ╟─2c9cd5e1-163c-48a7-b15e-63dcb791c750
+# ╟─5c231f46-02b0-43f9-9101-9eb222cff972
 # ╟─94192d5b-c4e9-487f-a36d-0261d9e86801
 # ╟─98eb10dd-a4a1-4c91-a0cd-dd1d1e6bc89a
 # ╠═8d2ac4c8-e94f-488e-a1fa-611b7b37fcea
@@ -1821,13 +1870,13 @@ More application examples:
 # ╟─08ea0d7e-2ffe-4f2e-bd8c-f15f9af0f35b
 # ╟─d58098e8-bba5-445c-b1c3-bfb597789916
 # ╟─a0644bb9-bf62-46aa-958e-aeeaaba3482e
-# ╟─2470f5ab-64d6-49d5-9816-0c958714ca73
 # ╠═eaf0cf1f-a7be-4399-86cc-66c131a57e44
+# ╟─2470f5ab-64d6-49d5-9816-0c958714ca73
 # ╠═73bb8b94-a45f-4dbb-a4f6-1f25ad8f194c
 # ╟─c9a05a6e-90c3-465d-896c-74bbb429f66a
 # ╟─fe3d8a72-f68b-4162-b5f2-cc168e80a3c6
 # ╟─fd83cbae-638e-49d7-88da-588fe055c963
-# ╠═3ca72cd5-58f8-47e1-88ca-cd115b181e74
+# ╟─3ca72cd5-58f8-47e1-88ca-cd115b181e74
 # ╟─fa62a7b3-8f17-42a3-8428-b2ac7eae737a
 # ╟─0f299cf1-f729-4999-af9d-4b39730100d8
 # ╟─e59b06d9-bc20-4d70-8940-5f0a53389738
@@ -1838,8 +1887,10 @@ More application examples:
 # ╟─3503abb4-4499-4355-85af-dfe76d69dac8
 # ╟─f18ad74f-ef8b-4c70-8af3-e6dac8305dd0
 # ╟─dc359052-19d9-4f29-903c-7eb9b210cbcd
-# ╟─b93009a7-533f-4c5a-a4f5-4c1d88cc1be4
+# ╠═b93009a7-533f-4c5a-a4f5-4c1d88cc1be4
 # ╠═9153d21d-709a-4619-92cc-82269e167c0c
+# ╠═20999544-cefd-4d00-a68c-cb6cfea36b1a
+# ╠═b2ea7e31-82c6-4b01-a8c6-26c3d7a2d562
 # ╟─76d4caa4-a10c-4247-a624-b6bfa5a743bc
 # ╟─91ec470d-f2b5-41c1-a50f-fc337995c73f
 # ╟─f899c053-335f-46e9-bfde-536f642700a1
@@ -1873,10 +1924,10 @@ More application examples:
 # ╟─9a670af7-cc20-446d-bf22-4e833cc9d854
 # ╟─f6949520-d10f-4bae-8d41-2ec880ac7484
 # ╟─9bef7690-0db3-4ba5-be77-0933ceb6215e
-# ╠═c872d563-421c-4581-a8fa-a02cee58bc85
+# ╟─c872d563-421c-4581-a8fa-a02cee58bc85
 # ╟─4d50d263-eca0-48ad-b32c-9b767cc57914
-# ╠═e4b13e58-2d54-47df-b865-95ae2946756a
-# ╠═9c05cae5-af20-4f63-99c9-86032358ffd3
+# ╟─e4b13e58-2d54-47df-b865-95ae2946756a
+# ╟─9c05cae5-af20-4f63-99c9-86032358ffd3
 # ╟─d2e5f60d-199a-41f5-ba5d-d21ab2030fb8
 # ╟─c10844d0-8328-42db-b49c-23713b9d88c6
 # ╟─9a9b3942-72f2-4c9e-88a5-af927634468c
@@ -1910,5 +1961,8 @@ More application examples:
 # ╟─f9b35e98-347f-4ebd-a690-790c7b0e03d8
 # ╟─80fa8831-924f-4093-a89c-bf8fc440da6b
 # ╟─4a3630ca-c8dd-4e81-8ee2-bb0fc6b01a93
+# ╟─e2b38ec3-2de9-49f1-b29a-e746014e4fe1
+# ╠═cfc02683-589b-44dc-a126-257703ed5f85
+# ╠═4caa7341-8750-44ec-ba4e-4d425836996d
 # ╟─d56a9e90-b0f6-4bde-8b3b-ebf1d962f6b4
 # ╟─9852e80b-1f8d-445e-96bf-f7e071d6715c
