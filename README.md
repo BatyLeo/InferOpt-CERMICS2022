@@ -1,4 +1,4 @@
-# Shortest paths on Warcraft images TP
+# InferOpt presentation and warcraft tutorial
 
 ## Get started
 
