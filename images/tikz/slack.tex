@@ -1,0 +1,19 @@
+\documentclass[crop,tikz]{standalone}
+
+\usepackage{graphicx}
+\usepackage{fancybox}
+\usepackage{amsmath, amssymb}
+
+\begin{document}
+
+\begin{tikzpicture}
+    \tikzset{node/.style={fill=red!10, shape=rectangle, draw=black, minimum width=100, minimum height=40, font=\LARGE, line width=1.5}}
+	\node[node] (t) at (0, 0) {$u$};
+	\node[node] (u) at (7, 0) {$t$};
+	\node[] (time1) at (-2, -1) {};
+	\node[] (time2) at (9, -1) {};
+	\draw[<->, line width=1.5] (t) edge node[below]{slack $\Delta_{u,t}$} (u);
+	\draw[->, line width=1.5] (time1) edge node[below, pos=0.95]{time} (time2);
+\end{tikzpicture}
+
+\end{document}

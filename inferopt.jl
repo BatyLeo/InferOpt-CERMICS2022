@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.14
+# v0.19.12
 
 using Markdown
 using InteractiveUtils
@@ -41,7 +41,7 @@ begin
 	Pkg.add(Pkg.PackageSpec(name="Statistics"))
 	Pkg.add(Pkg.PackageSpec(name="Tables"))
 	Pkg.add(Pkg.PackageSpec(name="Tar"))
-	Pkg.add(Pkg.PackageSpec(name="TikzPictures"))
+	#Pkg.add(Pkg.PackageSpec(name="TikzPictures"))
 	Pkg.add(Pkg.PackageSpec(name="UnicodePlots"))
 
 	using Colors
@@ -65,7 +65,7 @@ begin
 	using Statistics
 	using Tables
 	using Tar
-	using TikzPictures
+	#using TikzPictures
 	using PlutoUI
 	using UnicodePlots
 	Random.seed!(63)
@@ -162,118 +162,6 @@ begin
 	keep_working() = info(md"You're almost there."; title="Keep working!")
 	correct() = tip(md"Well done."; title="Correct!")
 end;
-
-# ╔═╡ 8623e8c5-7f70-4d63-9cff-c1f91a7edf70
-md"""Tikz figures"""
-
-# ╔═╡ 9eca9bb3-941f-4a68-8774-4b196087b2ea
-fig = TikzPicture(
-	L"""
-	\tikzset{dummy/.style={fill=green!10, shape=rectangle, draw=black, minimum size=60, font=\Huge, line width=1.5}}
-	\tikzset{task/.style={fill=orange!10, shape=circle, draw=black, minimum size=60, font=\Huge, line width=1.5}}
-	\tikzset{selected/.style={->, >=stealth, line width=2}}
-	\tikzset{redpath/.style={selected, color=red}}
-	\tikzset{bluepath/.style={selected, color=blue}}
-	\tikzset{purplepath/.style={selected, color=purple}}
-	\tikzset{nopath/.style={thick, ->, dashed, line width=2}}
-	tikzset{EdgeStyle/.style = {
-	  thick,
-	  text = black,
-	  ->,>=stealth'
-	}}
-	\node[dummy] (o) at (0,0) {$o$};
-	\node[task] (v1) at (5,7.5) {$t_1$};
-	\node[task] (v2) at (5,0) {$t_2$};
-	\node[task] (v3) at (10,2.5) {$t_3$};
-	\node[task] (v4) at (15,10) {$t_4$};
-	\node[task] (v5) at (15,5) {$t_5$};
-	\node[task] (v6) at (15,0) {$t_6$};
-	\node[task] (v7) at (20,7.5) {$t_7$};
-	\node[task] (v8) at (20,2.5) {$t_8$};
-	\node[dummy] (d) at (25,0) {$d$};
-	\draw[redpath] (o) edge (v1);
-	\draw[redpath] (v1) edge (v4);
-	\draw[redpath] (v4) edge (v7);
-	\draw[redpath] (v7) edge (d);
-	\draw[bluepath] (o) edge (v3);
-	\draw[bluepath] (v3) edge (v5);
-	\draw[bluepath] (v5) edge (v8);
-	\draw[bluepath] (v8) edge (d);
-	\draw[purplepath] (o) edge (v2);
-	\draw[purplepath] (v2) edge (v6);
-	\draw[purplepath] (v6) edge (d);
-	\draw[nopath] (v1) edge (v3);
-	\draw[nopath] (v2) edge (v3);
-	\draw[nopath] (v3) edge (v4);
-	\draw[nopath] (v3) edge (v6);
-	\draw[nopath] (v5) edge (v7);
-	\draw[nopath] (v6) edge (v8);
-	\node[] (time1) at (-1, -2) {};
-	\node[] (time2) at (26, -2) {};
-	\draw[line width=1.5, ->, >=stealth] (time1) edge node[font=\Huge, below, pos=0.95]{time} (time2);
-	""",
-	options="scale=1"
-);
-
-# ╔═╡ f499d3ba-ccb5-4879-8983-93b1c2915caa
-fig2 = TikzPicture(
-	L"""
-	\tikzset{node/.style={fill=red!10, shape=rectangle, draw=black, minimum width=100, minimum height=40, font=\LARGE, line width=1.5}}
-	\node[node] (t) at (0, 0) {$u$};
-	\node[node] (u) at (7, 0) {$t$};
-	\node[] (time1) at (-2, -1) {};
-	\node[] (time2) at (9, -1) {};
-	\draw[<->, line width=1.5] (t) edge node[below]{slack $\Delta_{u,t}$} (u);
-	\draw[->, line width=1.5] (time1) edge node[below, pos=0.95]{time} (time2);
-	""",
-	options="scale=1"
-);
-
-# ╔═╡ 4c989550-e0a3-4ec2-9da8-a6bb09836bd8
-fig3 = TikzPicture(L"""
-\tikzset{dummy/.style={fill=green!10, shape=rectangle, draw=black, minimum size=60, font=\Huge, line width=1.5}}
-\tikzset{task/.style={fill=orange!10, shape=circle, draw=black, minimum size=60, font=\Huge, line width=1.5}}
-\tikzset{selected/.style={->, >=stealth, line width=2}}
-\tikzset{redpath/.style={selected, color=red}}
-\tikzset{bluepath/.style={selected, color=blue}}
-\tikzset{purplepath/.style={selected, color=purple}}
-\tikzset{nopath/.style={thick, ->, dashed, line width=2}}
-tikzset{EdgeStyle/.style = {
-  thick,
-  text = black,
-  ->,>=stealth'
-}}
-\node[dummy] (o) at (0,0) {$o$};
-\node[task] (v1) at (5,7.5) {$t_1$};
-\node[task] (v2) at (5,0) {$t_2$};
-\node[task] (v3) at (10,2.5) {$t_3$};
-\node[task] (v4) at (15,10) {$t_4$};
-\node[task] (v5) at (15,5) {$t_5$};
-\node[task] (v6) at (15,0) {$t_6$};
-\node[task] (v7) at (20,7.5) {$t_7$};
-\node[task] (v8) at (20,2.5) {$t_8$};
-\node[dummy] (d) at (25,0) {$d$};
-\draw[nopath] (o) edge (v1);
-\draw[nopath] (v1) edge (v4);
-\draw[nopath] (v4) edge (v7);
-\draw[nopath] (v7) edge (d);
-\draw[nopath] (o) edge (v3);
-\draw[nopath] (v3) edge (v5);
-\draw[nopath] (v5) edge (v8);
-\draw[nopath] (v8) edge (d);
-\draw[nopath] (o) edge (v2);
-\draw[nopath, color=red] (v2) edge node[font=\LARGE, color=red, above]{$\theta_{2, 6} = w^\top \xi((2, 6), x)$} (v6);
-\draw[nopath] (v6) edge (d);
-\draw[nopath] (v1) edge (v3);
-\draw[nopath] (v2) edge (v3);
-\draw[nopath] (v3) edge (v4);
-\draw[nopath] (v3) edge (v6);
-\draw[nopath] (v5) edge (v7);
-\draw[nopath] (v6) edge (v8);
-\node[] (time1) at (-1, -2) {};
-\node[] (time2) at (26, -2) {};
-\draw[line width=1.5, ->, >=stealth] (time1) edge node[font=\Huge, below, pos=0.95]{time} (time2);
-""", options="scale=1");
 
 # ╔═╡ f4800c47-0f98-4ec7-85e6-5c2a19f784f5
 md"""
@@ -418,7 +306,9 @@ md"""
 """
 
 # ╔═╡ dda2e192-36fa-418b-8f4e-4cb3afd69360
-fig
+begin
+	vsp_instance = load("./images/VSP/vsp_instance.pdf")
+end
 
 # ╔═╡ 5764e92d-7fc4-4b62-a709-79979fb4b90c
 md"""
@@ -442,15 +332,14 @@ md"""
 """
 
 # ╔═╡ ca8e2520-89c0-4364-b893-877974d9854f
-fig2
+begin
+	vsp_slack = load("./images/VSP/slack.png")
+end
 
 # ╔═╡ dc2158c8-4396-4d53-8bba-59fbc2cffa79
 md"""
 ## MILP formulation
 """
-
-# ╔═╡ 02e230e2-6362-4758-8c6d-257172c3a8fe
-fig
 
 # ╔═╡ 5c9a3382-ff79-4d72-a153-a0b768e5d8e1
 md"""
@@ -490,27 +379,23 @@ md"""
 Goal: for an instance ``x`` of ``(H)``, find ``\theta(x)`` such that the solution ``\hat f(\theta)`` of ``(E)`` is a good solution of ``(H)``
 """
 
-# ╔═╡ e99c8278-a7bf-40af-adcc-21f41d4857b4
+# ╔═╡ 4db56292-397a-4c49-b7ff-a6a85264041d
 md"""
 ## ML-CO pipeline
-
-```math
-\xrightarrow[x \text{ of } (H)]{\text{Instance}}
-\fbox{Features $\xi(a, x)$}
-\xrightarrow[]{\xi\in \mathbb{R}^{k\times d(x)}}
-\fbox{GLM $\xi \mapsto w^\top \xi$}
-\xrightarrow[\theta \in \mathbb{R}^{d(x)}]{\text{Cost vector}}
-\fbox{Optimizer}
-\xrightarrow[y \in \mathcal{Y}(x)]{\text{Solution}}
-```
-
-Machine learning predictor:
-- ``\theta_a = w^T \xi(a, x)``
-- learnable weights ``w``
 """
 
 # ╔═╡ 95f96123-2bcf-4935-9738-e0efd42a0daf
-fig3
+begin
+	vsp_pipeline = load("./images/VSP/stovsp_pipeline.png")
+end
+
+# ╔═╡ e99c8278-a7bf-40af-adcc-21f41d4857b4
+md"""
+Machine learning predictor:
+- ``\theta_a = w^T \phi(a, x)``
+- learnable weights ``w``
+- features $\phi$
+"""
 
 # ╔═╡ 5de471fa-4806-4b74-a1af-0cb25d81ba91
 md"""
@@ -526,7 +411,7 @@ end
 
 # ╔═╡ f8a2cace-50e1-4d5f-86b6-91c820bace26
 md"""
-!!! todo
+!!! success
 	TODO more detailed results
 """
 
@@ -1785,17 +1670,13 @@ Detailed application examples:
 # ╔═╡ Cell order:
 # ╟─e279878d-9c8d-47c8-9453-3aee1118818b
 # ╟─8b7876e4-2f28-42f8-87a1-459b665cff30
-# ╟─6160785a-d455-40b4-ab74-e61c46e31537
+# ╠═6160785a-d455-40b4-ab74-e61c46e31537
 # ╟─a0d14396-cb6a-4f35-977a-cf3b63b44d9e
 # ╟─b5b0bb58-9e02-4551-a9ba-0ba0ffceb350
 # ╟─2182d4d2-6506-4fd6-936f-0e7c30d73851
 # ╟─1f0c5b88-f903-4a67-9581-b3a07c504d5c
 # ╟─a8d0f8be-01a8-4a2a-84e3-ca16e7ef5203
 # ╟─86735dcf-de5b-4f32-8bf9-501e006f58d5
-# ╟─8623e8c5-7f70-4d63-9cff-c1f91a7edf70
-# ╟─9eca9bb3-941f-4a68-8774-4b196087b2ea
-# ╟─f499d3ba-ccb5-4879-8983-93b1c2915caa
-# ╟─4c989550-e0a3-4ec2-9da8-a6bb09836bd8
 # ╟─f4800c47-0f98-4ec7-85e6-5c2a19f784f5
 # ╟─3e7077cd-4a14-4971-801d-9b9eadd59624
 # ╟─72f8e7ec-193c-44d3-892d-aec4d4a631bb
@@ -1813,18 +1694,18 @@ Detailed application examples:
 # ╟─64c69987-6416-488b-8b7f-55d48771184d
 # ╟─aac53339-1091-4308-8d61-5ab4d3334c26
 # ╟─16963349-5467-4019-be3d-d1b5375cf90e
-# ╠═1574b408-cf50-4c57-9fb8-eaa22bb3ece1
+# ╟─1574b408-cf50-4c57-9fb8-eaa22bb3ece1
 # ╟─400867ad-11e6-411b-8b1f-c64685630fdc
 # ╟─dda2e192-36fa-418b-8f4e-4cb3afd69360
 # ╟─5764e92d-7fc4-4b62-a709-79979fb4b90c
 # ╟─799fcc82-6a25-47a7-8b52-32a754d4e875
 # ╟─ca8e2520-89c0-4364-b893-877974d9854f
 # ╟─dc2158c8-4396-4d53-8bba-59fbc2cffa79
-# ╟─02e230e2-6362-4758-8c6d-257172c3a8fe
 # ╟─5c9a3382-ff79-4d72-a153-a0b768e5d8e1
 # ╟─9a7b8a7b-2e17-4b3b-b177-fef39e1e0354
-# ╟─e99c8278-a7bf-40af-adcc-21f41d4857b4
+# ╟─4db56292-397a-4c49-b7ff-a6a85264041d
 # ╟─95f96123-2bcf-4935-9738-e0efd42a0daf
+# ╟─e99c8278-a7bf-40af-adcc-21f41d4857b4
 # ╟─5de471fa-4806-4b74-a1af-0cb25d81ba91
 # ╟─e9d1aee8-b312-4540-8179-e9648e59fc53
 # ╠═f8a2cace-50e1-4d5f-86b6-91c820bace26
