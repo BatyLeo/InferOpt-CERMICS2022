@@ -41,7 +41,6 @@ begin
 	Pkg.add(Pkg.PackageSpec(name="Statistics"))
 	Pkg.add(Pkg.PackageSpec(name="Tables"))
 	Pkg.add(Pkg.PackageSpec(name="Tar"))
-	#Pkg.add(Pkg.PackageSpec(name="TikzPictures"))
 	Pkg.add(Pkg.PackageSpec(name="UnicodePlots"))
 
 	using Colors
@@ -65,7 +64,6 @@ begin
 	using Statistics
 	using Tables
 	using Tar
-	#using TikzPictures
 	using PlutoUI
 	using UnicodePlots
 	Random.seed!(63)
@@ -411,7 +409,7 @@ end
 
 # ╔═╡ f8a2cace-50e1-4d5f-86b6-91c820bace26
 md"""
-!!! success
+!!! todo
 	TODO more detailed results
 """
 
@@ -634,7 +632,7 @@ Given a target solution $\bar{y}$ and a parameter $\theta$, a subgradient is giv
 ```math
 \widehat{f}_{\Omega}(\theta) - \bar{y} \in \partial_\theta \mathcal{L}_{\Omega}^{\text{FY}}(\theta, \bar{y}).
 ```
-The optimization block has meaningful gradients $\implies$ we can backpropagate through the whole pipeline.
+The optimization block has meaningful gradients $\implies$ we can backpropagate through the whole pipeline, using automatic differentiation.
 """
 
 # ╔═╡ 3a84fd20-41fa-4156-9be5-a0371754b394
@@ -1009,12 +1007,18 @@ Let $D = (V, A)$ be a digraph, $(c_a)_{a \in A}$ the cost associated to the arcs
 md"""
 !!! danger "Question"
 	When the cost function is non-negative, which algorithm can we use ?
+
+!!! hint "Answer"
+	Dijktra algorithm is the fastest in this case
 """
 
 # ╔═╡ 487eb4f1-cd50-47a7-8d61-b141c1b272f0
 md"""
 !!! danger "Question" 
 	In the case the graph contains no absorbing cycle, which algorithm can we use ? 	On which principle is it based ?
+
+!!! hint "Answer"
+	Dijkstra algorithm cannot be used with negative cost edges. However, when there is no absorbing cycles, dynamic programming can be applied.
 """
 
 # ╔═╡ 654066dc-98fe-4c3b-92a9-d09efdfc8080
@@ -1242,8 +1246,8 @@ md"""
 
 # ╔═╡ 9eb0ca01-bd65-48df-ab32-beaca2e38482
 md"""
-!!! danger "Todo"
-	Complete the following code to define the `shortest_path_cost_ratio` function. The candidate path $\hat{y}$ is given by the output of `model` applied on image `x`, and `y` is the target shortest path.
+!!! info
+	The following code defines the `shortest_path_cost_ratio` function. The candidate path $\hat{y}$ is given by the output of `model` applied on image `x`, and `y` is the target shortest path.
 """
 
 # ╔═╡ b25f438f-832c-4717-bb73-acbb22aec384
@@ -1330,14 +1334,14 @@ md"""
 # ╔═╡ c872d563-421c-4581-a8fa-a02cee58bc85
 md"""
 ```math
-$F^+_\varepsilon (\theta) := \mathbb{E}_{Z}\big[ \max_{y \in \mathcal{C}} (\theta + \varepsilon Z)^\top y \big]$ 
+F^+_\varepsilon (\theta) := \mathbb{E}_{Z}\big[ \max_{y \in \mathcal{C}} (\theta + \varepsilon Z)^\top y \big]
 ```
 """
 
 # ╔═╡ 4d50d263-eca0-48ad-b32c-9b767cc57914
 md"""
 !!! danger "Question"
-	From your homework, what can you say about $F^+_\epsilon (\theta)$ and $y^+_\epsilon (\theta)$ ? What are their properties ? 
+	From your homework, what can you say about $F^+_\epsilon (\theta)$ and $f^+_\epsilon (\theta)$ ? What are their properties ?
 """
 
 # ╔═╡ e4b13e58-2d54-47df-b865-95ae2946756a
@@ -1348,13 +1352,16 @@ Let $\Omega_\varepsilon^+$ be the Fenchel conjugate of $F^+_\varepsilon (\theta)
 
 # ╔═╡ 9c05cae5-af20-4f63-99c9-86032358ffd3
 md"""
-$L_\varepsilon^+ (\theta, y) := F^+_{\varepsilon} (\theta) + \Omega_{\varepsilon}^+ (y) - \langle \theta, y \rangle$
+$L_\varepsilon^+ (\theta, y) := F^+_{\varepsilon} (\theta) + \Omega_{\varepsilon}^+ (y) - \theta^\top y$
 """
 
 # ╔═╡ d2e5f60d-199a-41f5-ba5d-d21ab2030fb8
 md"""
 !!! danger "Question"
 	What are the properties of $L_\varepsilon^+ (\theta, y)$ ?
+
+!!! hint "Answer"
+	It is differentiable and convex ``\implies`` easy optimization
 """
 
 # ╔═╡ 6293fde0-3cfc-4d0d-bed6-74caa54b6ead
@@ -1375,7 +1382,7 @@ We introduce a variant of the additive pertubation defined above, which is simpl
 
 # ╔═╡ 44ece9ce-f9f1-46f3-90c6-cb0502c92c67
 md"""
-${y}_\varepsilon^\odot (\theta) := \mathbb{E}_Z \bigg[\operatorname{argmax}_{y \in \mathcal{C}} \langle \theta \odot e^{\epsilon Z - \varepsilon^2 \mathbf{1} / 2},  y \rangle \bigg]$
+${y}_\varepsilon^\odot (\theta) := \mathbb{E}_Z \bigg[\operatorname{argmax}_{y \in \mathcal{C}} (\theta \odot e^{\epsilon Z - \varepsilon^2 \mathbf{1} / 2})^\top y \bigg]$
 """
 
 # ╔═╡ 5d8d34bb-c207-40fc-ab10-c579e7e2d04c
@@ -1389,12 +1396,15 @@ md"""
 We omit the details of the loss derivations and concentrate on implementation.
 
 !!! danger "Todo"
+	Replace the additive perturbation by a multipicative one.
+
+!!! hint
 	You can modify the previous additive implementation below, by replacing the `PerturbedAdditive` regularization with a `PerturbedMultiplicative` one. You can also modify use `dijkstra_maximizer` instead of `belmann_maximizer` as the `true_maximizer`, which runs faster.
 """
 
 # ╔═╡ 0fd29811-9e17-4c97-b9b7-ec9cc51b435f
 md"""
-## 3) Smart Predict then optimize
+### 3) Smart Predict then optimize
 
 TODO
 """
@@ -1413,6 +1423,9 @@ When we restrict the train dataset to images $I$ and black-box cost functions $c
 
 !!! danger "Todo"
 	Modify the code below to learn by experience using a multiplicative perturbation and the black-box cost function.
+
+!!! hint
+	Use the `PushForward` struct to define a learn by experience loss.
 """
 
 # ╔═╡ a5bfd185-aa77-4e46-a6b6-d43c4785a7fa
@@ -1477,7 +1490,6 @@ begin
 	    encoder=deepcopy(initial_encoder),
 	    maximizer=identity, # TODO: remove that ?? more confusing than anything else
 		loss = FenchelYoungLoss(PerturbedAdditive(true_maximizer; ε=options.ε, nb_samples=options.M)),
-		#loss=SPOPlusLoss(bellman_maximizer)
 	)
 end
 
@@ -1533,7 +1545,7 @@ begin
 	        cost_ratios[epoch, 1] = shortest_path_cost_ratio(model = encoder, dataset = train_dataset)
 	        cost_ratios[epoch, 2] = shortest_path_cost_ratio(model = encoder, dataset = test_dataset)
 	    end
-	     return losses, cost_ratios
+	     return losses, (cost_ratios .- 1) .* 100
 	end
 
 end
@@ -1575,14 +1587,13 @@ Given the specific pipeline and loss, we can apply our generic train function to
 
 # ╔═╡ 83a14158-33d1-4f16-85e1-2726c8fbbdfc
 begin
-	Losses, Cost_ratios = train_function!(;
+	Losses, Gaps = train_function!(;
 	    encoder=encoder,
 	    flux_loss = flux_loss_batch,
 	    train_dataset=Flux.DataLoader(train_dataset; batchsize=batch_size),
 	    test_dataset = Flux.DataLoader(test_dataset; batchsize=length(test_dataset)),
 	    options=options,
 	)
-	Gaps = (Cost_ratios .- 1) .* 100
 end;
 
 # ╔═╡ 4b31dca2-0195-4899-8a3a-e9772fabf495
@@ -1612,7 +1623,8 @@ md"""
 # ╔═╡ 521f5ffa-2c22-44c5-8bdb-67410431ca2e
 begin
 	test_predictions = []
-	for (x, y, k) in test_dataset
+	dataset_to_test = test_dataset # change to `train_dataset` if you want to look through the training samples, or to `dataset` if you want to see everything
+	for (x, y, k) in dataset_to_test 
 		θ0 = initial_encoder(x)
 		y0 = UInt8.(true_maximizer(θ0))
 		θp = encoder(x)
@@ -1623,7 +1635,7 @@ end
 
 # ╔═╡ f9b35e98-347f-4ebd-a690-790c7b0e03d8
 md"""
-``j =`` $(@bind j Slider(1:length(test_dataset); default=1, show_value=true))
+``j =`` $(@bind j Slider(1:length(dataset_to_test); default=1, show_value=true))
 """
 
 # ╔═╡ 842bf89d-45eb-462d-ba74-ca260a8b177d
@@ -1658,7 +1670,7 @@ md"""
 
 - **Main package:** <https://github.com/axelparmentier/InferOpt.jl>
 - **This notebook:** <https://github.com/BatyLeo/InferOpt-CERMICS2022>
-- Our paper on ArXiV: https://arxiv.org/abs/2207.13513
+- Our paper on ArXiV: <https://arxiv.org/abs/2207.13513>
 
 Detailed application examples:
 - **Shortest paths on Warcraft maps:** <https://github.com/LouisBouvier/WarcraftShortestPaths.jl>
@@ -1670,7 +1682,7 @@ Detailed application examples:
 # ╔═╡ Cell order:
 # ╟─e279878d-9c8d-47c8-9453-3aee1118818b
 # ╟─8b7876e4-2f28-42f8-87a1-459b665cff30
-# ╠═6160785a-d455-40b4-ab74-e61c46e31537
+# ╟─6160785a-d455-40b4-ab74-e61c46e31537
 # ╟─a0d14396-cb6a-4f35-977a-cf3b63b44d9e
 # ╟─b5b0bb58-9e02-4551-a9ba-0ba0ffceb350
 # ╟─2182d4d2-6506-4fd6-936f-0e7c30d73851
@@ -1708,7 +1720,7 @@ Detailed application examples:
 # ╟─e99c8278-a7bf-40af-adcc-21f41d4857b4
 # ╟─5de471fa-4806-4b74-a1af-0cb25d81ba91
 # ╟─e9d1aee8-b312-4540-8179-e9648e59fc53
-# ╠═f8a2cace-50e1-4d5f-86b6-91c820bace26
+# ╟─f8a2cace-50e1-4d5f-86b6-91c820bace26
 # ╟─c59d4022-fdd5-469f-8fb1-abbcb6a81c8a
 # ╟─fde5498e-3d07-4276-b5d7-263c44d29da1
 # ╟─44039f2f-a1d8-4370-98b0-b7985d7d65bd
@@ -1808,10 +1820,10 @@ Detailed application examples:
 # ╟─6293fde0-3cfc-4d0d-bed6-74caa54b6ead
 # ╟─9a9b3942-72f2-4c9e-88a5-af927634468c
 # ╟─1ff198ea-afd5-4acc-bb67-019051ff149b
-# ╟─44ece9ce-f9f1-46f3-90c6-cb0502c92c67
+# ╠═44ece9ce-f9f1-46f3-90c6-cb0502c92c67
 # ╟─5d8d34bb-c207-40fc-ab10-c579e7e2d04c
 # ╟─43d68541-84a5-4a63-9d8f-43783cc27ccc
-# ╠═0fd29811-9e17-4c97-b9b7-ec9cc51b435f
+# ╟─0fd29811-9e17-4c97-b9b7-ec9cc51b435f
 # ╟─90a47e0b-b911-4728-80b5-6ed74607833d
 # ╟─5d79b8c1-beea-4ff9-9830-0f5e1c4ef29f
 # ╟─a5bfd185-aa77-4e46-a6b6-d43c4785a7fa
