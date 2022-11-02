@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.12
+# v0.19.14
 
 using Markdown
 using InteractiveUtils
@@ -42,6 +42,7 @@ begin
 	Pkg.add(Pkg.PackageSpec(name="Tables"))
 	Pkg.add(Pkg.PackageSpec(name="Tar"))
 	Pkg.add(Pkg.PackageSpec(name="UnicodePlots"))
+	Pkg.add(Pkg.PackageSpec(name="ZipFile"))
 
 	using Colors
 	using CSV
@@ -66,6 +67,7 @@ begin
 	using Tar
 	using PlutoUI
 	using UnicodePlots
+	using ZipFile
 	Random.seed!(63)
 end;
 
@@ -292,7 +294,7 @@ end
 
 # ╔═╡ 6b5bdb05-bdd9-48be-93a5-0aa284da8b6b
 md"""
-### Loss and gap during training: train and test sets
+## Loss and gap during training: train and test sets
 """
 
 # ╔═╡ 1574b408-cf50-4c57-9fb8-eaa22bb3ece1
@@ -409,18 +411,58 @@ begin
 	plot(vspheuristic, vspexperience, layout = (1,2), ticks = nothing, border = nothing, size = (800, 300))
 end
 
-# ╔═╡ f8a2cace-50e1-4d5f-86b6-91c820bace26
+# ╔═╡ 9805f978-40a5-4e83-ae0f-032c5d7a2d56
 md"""
-!!! todo
-	TODO more detailed results
+## Objective gaps
 """
+
+# ╔═╡ 8b50c5d8-9470-4346-84ec-1f7a27f5f3e7
+load("./images/VSP/cost_gap.png")
+
+# ╔═╡ a613038d-38a2-4fb6-a81f-65bff0e1df5f
+md"""
+## Average cost per task
+"""
+
+# ╔═╡ 78038bba-8547-48d1-8192-b35d6e80f0af
+load("./images/VSP/cost_per_task.png")
 
 # ╔═╡ c59d4022-fdd5-469f-8fb1-abbcb6a81c8a
 md"""
 ## Two stage minimum weight spanning tree
-
-TODO
 """
+
+# ╔═╡ 4e79ca37-713f-4213-ac22-b5de64c036ad
+md"""
+```math
+\begin{aligned}
+	\min\limits_{y, z}\,& \displaystyle\sum_{e \in E} c_e y_e + \frac{1}{|S|}\sum_{e \in E} \sum_{s \in S} d_{es} z_{es},\\
+	\mathrm{s.t.}\,&\displaystyle\sum_{e \in E} y_e + z_{es} = |V|-1, & \forall s \in S, \\
+	&\displaystyle\sum_{e \in E(Y)} y_e + z_{es} \leq |Y| - 1, \qquad &\forall Y,\, \emptyset \subsetneq Y \subsetneq V,\, \forall s \in S, \\
+	& y_e \in \{0,1\}, & \forall e \in E, \\
+	& z_{es} \in \{0,1\}, & \forall e\in E,\, \forall s\in S,
+\end{aligned}
+```
+"""
+
+# ╔═╡ b7159902-6cf6-4de5-a974-0f23a7f3928d
+load("./images/spanningTree/problem.png")
+
+# ╔═╡ 92685f51-4b14-46bc-8f37-d7ea370b9bc5
+md"""
+## Pipeline
+"""
+
+# ╔═╡ dc1e9f2f-9c15-4cc4-95d4-cc6c2113d359
+load("./images/spanningTree/pipeline.png")
+
+# ╔═╡ ebafdeab-50d7-4450-950c-fc3ced4fcaa1
+md"""
+## Results
+"""
+
+# ╔═╡ a8289ca7-67c9-4212-a07c-f5aac975e615
+load("./images/spanningTree/results.png")
 
 # ╔═╡ fde5498e-3d07-4276-b5d7-263c44d29da1
 md"""
@@ -1703,7 +1745,7 @@ Detailed application examples:
 # ╔═╡ Cell order:
 # ╟─e279878d-9c8d-47c8-9453-3aee1118818b
 # ╟─8b7876e4-2f28-42f8-87a1-459b665cff30
-# ╟─6160785a-d455-40b4-ab74-e61c46e31537
+# ╠═6160785a-d455-40b4-ab74-e61c46e31537
 # ╟─a0d14396-cb6a-4f35-977a-cf3b63b44d9e
 # ╟─b5b0bb58-9e02-4551-a9ba-0ba0ffceb350
 # ╟─2182d4d2-6506-4fd6-936f-0e7c30d73851
@@ -1730,7 +1772,7 @@ Detailed application examples:
 # ╟─6b5bdb05-bdd9-48be-93a5-0aa284da8b6b
 # ╟─1574b408-cf50-4c57-9fb8-eaa22bb3ece1
 # ╟─400867ad-11e6-411b-8b1f-c64685630fdc
-# ╠═dda2e192-36fa-418b-8f4e-4cb3afd69360
+# ╟─dda2e192-36fa-418b-8f4e-4cb3afd69360
 # ╟─5764e92d-7fc4-4b62-a709-79979fb4b90c
 # ╟─799fcc82-6a25-47a7-8b52-32a754d4e875
 # ╟─ca8e2520-89c0-4364-b893-877974d9854f
@@ -1742,8 +1784,17 @@ Detailed application examples:
 # ╟─e99c8278-a7bf-40af-adcc-21f41d4857b4
 # ╟─5de471fa-4806-4b74-a1af-0cb25d81ba91
 # ╟─e9d1aee8-b312-4540-8179-e9648e59fc53
-# ╟─f8a2cace-50e1-4d5f-86b6-91c820bace26
+# ╟─9805f978-40a5-4e83-ae0f-032c5d7a2d56
+# ╟─8b50c5d8-9470-4346-84ec-1f7a27f5f3e7
+# ╟─a613038d-38a2-4fb6-a81f-65bff0e1df5f
+# ╟─78038bba-8547-48d1-8192-b35d6e80f0af
 # ╟─c59d4022-fdd5-469f-8fb1-abbcb6a81c8a
+# ╟─4e79ca37-713f-4213-ac22-b5de64c036ad
+# ╟─b7159902-6cf6-4de5-a974-0f23a7f3928d
+# ╟─92685f51-4b14-46bc-8f37-d7ea370b9bc5
+# ╟─dc1e9f2f-9c15-4cc4-95d4-cc6c2113d359
+# ╟─ebafdeab-50d7-4450-950c-fc3ced4fcaa1
+# ╟─a8289ca7-67c9-4212-a07c-f5aac975e615
 # ╟─fde5498e-3d07-4276-b5d7-263c44d29da1
 # ╟─0c21a4d7-ca78-4cae-959c-74e5e5c7ce05
 # ╟─c6ce9c7e-f359-407d-8f8e-0efa2afd0377
