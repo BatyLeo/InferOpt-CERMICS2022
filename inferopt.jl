@@ -42,6 +42,7 @@ begin
 	Pkg.add(Pkg.PackageSpec(name="Tables"))
 	Pkg.add(Pkg.PackageSpec(name="Tar"))
 	Pkg.add(Pkg.PackageSpec(name="UnicodePlots"))
+	Pkg.add(Pkg.PackageSpec(name="ZipFile"))
 
 	using Colors
 	using CSV
@@ -66,6 +67,7 @@ begin
 	using Tar
 	using PlutoUI
 	using UnicodePlots
+	using ZipFile
 	Random.seed!(63)
 end;
 
