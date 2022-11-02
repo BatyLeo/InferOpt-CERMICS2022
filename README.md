@@ -1,10 +1,9 @@
 # InferOpt presentation and warcraft tutorial
 
-An online version of the notebook can be found [here](https://batyleo.github.io/InferOpt-CERMICS2022/inferopt.html).
-
 ## Get started
 
-1) Before running the notebook, please download the [dataset](http://cermics.enpc.fr/~bouvierl/warcraft_TP/data.zip) and unzip it in the same folder as the repository.
+1) Before running the notebook, please unzip the dataset in the same folder as the repository.
+(Note: you can also find the dataset [here](http://cermics.enpc.fr/~bouvierl/warcraft_TP/data.zip) for download)
 
 2) Open a Julia REPL in the folder of this repo, and run:
 
