@@ -290,13 +290,15 @@ begin
 	plot(mapterrain, labelpath, computed_path, layout = (1,3), ticks = nothing, border = nothing, size = (800, 300))
 end
 
-# ╔═╡ 1574b408-cf50-4c57-9fb8-eaa22bb3ece1
+# ╔═╡ 6b5bdb05-bdd9-48be-93a5-0aa284da8b6b
 md"""
-## Results
-
-!!! todo
-	TODO
+### Loss and gap during training: train and test sets
 """
+
+# ╔═╡ 1574b408-cf50-4c57-9fb8-eaa22bb3ece1
+begin	
+	warcraft_results = load("./images/Warcraft/results_warcraft.png")
+end
 
 # ╔═╡ 400867ad-11e6-411b-8b1f-c64685630fdc
 md"""
@@ -423,9 +425,28 @@ TODO
 # ╔═╡ fde5498e-3d07-4276-b5d7-263c44d29da1
 md"""
 ## Single machine scheduling problem
-
-TODO
 """
+
+# ╔═╡ 0c21a4d7-ca78-4cae-959c-74e5e5c7ce05
+md"""
+#### Scheduling learning pipeline
+
+"""
+
+# ╔═╡ c6ce9c7e-f359-407d-8f8e-0efa2afd0377
+begin	
+	pipeline_scheduling_image = load("./images/scheduling/pipeline_scheduling.png")
+end
+
+# ╔═╡ 11277f90-bd58-4b1f-90c2-3c9ad06d49c2
+md"""
+#### Results: gap with respect to best solution known
+"""
+
+# ╔═╡ 1893bfb4-a691-4eeb-bdd0-2769c83439cf
+begin	
+	results_scheduling = load("./images/scheduling/results_scheduling.png")
+end
 
 # ╔═╡ 44039f2f-a1d8-4370-98b0-b7985d7d65bd
 md"""
@@ -1706,9 +1727,10 @@ Detailed application examples:
 # ╟─64c69987-6416-488b-8b7f-55d48771184d
 # ╟─aac53339-1091-4308-8d61-5ab4d3334c26
 # ╟─16963349-5467-4019-be3d-d1b5375cf90e
+# ╟─6b5bdb05-bdd9-48be-93a5-0aa284da8b6b
 # ╟─1574b408-cf50-4c57-9fb8-eaa22bb3ece1
 # ╟─400867ad-11e6-411b-8b1f-c64685630fdc
-# ╟─dda2e192-36fa-418b-8f4e-4cb3afd69360
+# ╠═dda2e192-36fa-418b-8f4e-4cb3afd69360
 # ╟─5764e92d-7fc4-4b62-a709-79979fb4b90c
 # ╟─799fcc82-6a25-47a7-8b52-32a754d4e875
 # ╟─ca8e2520-89c0-4364-b893-877974d9854f
@@ -1723,6 +1745,10 @@ Detailed application examples:
 # ╟─f8a2cace-50e1-4d5f-86b6-91c820bace26
 # ╟─c59d4022-fdd5-469f-8fb1-abbcb6a81c8a
 # ╟─fde5498e-3d07-4276-b5d7-263c44d29da1
+# ╟─0c21a4d7-ca78-4cae-959c-74e5e5c7ce05
+# ╟─c6ce9c7e-f359-407d-8f8e-0efa2afd0377
+# ╟─11277f90-bd58-4b1f-90c2-3c9ad06d49c2
+# ╟─1893bfb4-a691-4eeb-bdd0-2769c83439cf
 # ╟─44039f2f-a1d8-4370-98b0-b7985d7d65bd
 # ╟─87040fd6-bd1a-47dd-875c-2caf5b50d2ce
 # ╟─79aa1f6b-553f-4873-925c-4db728f9f9eb
@@ -1820,7 +1846,7 @@ Detailed application examples:
 # ╟─6293fde0-3cfc-4d0d-bed6-74caa54b6ead
 # ╟─9a9b3942-72f2-4c9e-88a5-af927634468c
 # ╟─1ff198ea-afd5-4acc-bb67-019051ff149b
-# ╠═44ece9ce-f9f1-46f3-90c6-cb0502c92c67
+# ╟─44ece9ce-f9f1-46f3-90c6-cb0502c92c67
 # ╟─5d8d34bb-c207-40fc-ab10-c579e7e2d04c
 # ╟─43d68541-84a5-4a63-9d8f-43783cc27ccc
 # ╟─0fd29811-9e17-4c97-b9b7-ec9cc51b435f
