@@ -1,5 +1,7 @@
 # InferOpt presentation and warcraft tutorial
 
+You need to have Julia 1.7 or higher installed in order to run the notebook tutorial.
+
 ## Get started
 
 1) Before running the notebook, please unzip the dataset in the same folder as the repository.
